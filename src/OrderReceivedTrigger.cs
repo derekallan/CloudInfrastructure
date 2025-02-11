@@ -31,22 +31,29 @@ public class OrderReceivedTrigger
     [Function(nameof(OrderReceivedTrigger))]
     public void Run([EventGridTrigger] CloudEvent cloudEvent)
     {
-        _logger.LogInformation("Event type: {type}, Event subject: {subject}", cloudEvent.Type, cloudEvent.Subject);
-        _logger.LogInformation("DataType: {type}", cloudEvent.DataContentType);
-        _logger.LogInformation("Data: {Data}", cloudEvent.Data);
-
-        if (cloudEvent.Data is not null)
+        try
         {
-            var order = JsonSerializer.Deserialize<Order>(cloudEvent.Data.ToString(), new JsonSerializerOptions
+            _logger.LogInformation("Event type: {type}, Event subject: {subject}", cloudEvent.Type, cloudEvent.Subject);
+            _logger.LogInformation("DataType: {type}", cloudEvent.DataContentType);
+            _logger.LogInformation("Data: {Data}", cloudEvent.Data);
+
+            if (cloudEvent.Data is not null)
             {
-                PropertyNameCaseInsensitive = true
-            });
-            if (order is null)
-            {
-                _logger.LogWarning("Failed to deserialize the order data.");
-                return;
+                var order = JsonSerializer.Deserialize<Order>(cloudEvent.Data.ToString(), new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+                if (order is null)
+                {
+                    _logger.LogWarning("Failed to deserialize the order data.");
+                    return;
+                }
+                _logger.LogInformation("Order received: {orderId}, {orderDate}, {orderAmount}", order.OrderId, order.OrderDate, order.OrderAmount);
             }
-            _logger.LogInformation("Order received: {orderId}, {orderDate}, {orderAmount}", order.OrderId, order.OrderDate, order.OrderAmount);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred processing the order.");
         }
     }
 }
