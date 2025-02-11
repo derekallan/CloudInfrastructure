@@ -5,6 +5,7 @@ using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Azure.Messaging;
+using Azure.Messaging.EventGrid;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
@@ -29,17 +30,16 @@ public class OrderReceivedTrigger
     }
 
     [Function(nameof(OrderReceivedTrigger))]
-    public void Run([EventGridTrigger] CloudEvent cloudEvent)
+    public void Run([EventGridTrigger] EventGridEvent eventGridEvent)
     {
         try
         {
-            _logger.LogInformation("Event type: {type}, Event subject: {subject}", cloudEvent.Type, cloudEvent.Subject);
-            _logger.LogInformation("DataType: {type}", cloudEvent.DataContentType);
-            _logger.LogInformation("Data: {Data}", cloudEvent.Data);
+            _logger.LogInformation("Event type: {type}, Event subject: {subject}", eventGridEvent.EventType, eventGridEvent.Subject);
+            _logger.LogInformation("Data: {Data}", eventGridEvent.Data);
 
-            if (cloudEvent.Data is not null)
+            if (eventGridEvent.Data is not null)
             {
-                var order = JsonSerializer.Deserialize<Order>(cloudEvent.Data.ToString(), new JsonSerializerOptions
+                var order = JsonSerializer.Deserialize<Order>(eventGridEvent.Data.ToString(), new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 });
