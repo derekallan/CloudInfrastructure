@@ -3,7 +3,7 @@ name: Deploy DotNet project to Azure Function App
 on:
   push:
     branches:
-      - main
+      - master
 
 env:
   AZURE_FUNCTIONAPP_NAME: 'eventgridtrialprocessor'
