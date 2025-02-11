@@ -6,6 +6,17 @@
             "type": "coreclr",
             "request": "attach",
             "processId": "${command:azureFunctions.pickProcess}"
+        },
+        {
+            "name": "PublishEvent",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "Build Publish Event",
+            "program": "${workspaceFolder}/PublishEvent/bin/Debug/net8.0/PublishEvent.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/PublishEvent",
+            "stopAtEntry": false,
+            "console": "integratedTerminal"
         }
     ]
 }
