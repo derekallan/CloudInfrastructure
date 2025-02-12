@@ -11,21 +11,29 @@ var config = new ConfigurationBuilder()
 
 var client = new EventGridPublisherClient(new Uri(config["EventGridTopic"]), new AzureKeyCredential(config["EventGridKey"]));
 
-var events = new List<EventGridEvent>
+var tasks = new List<Task>();
+var messagesToSend = 10;
+for (var i = 0; i < messagesToSend; i++)
 {
-    new EventGridEvent(
-        "ExampleEventSubject",
-        "Example.EventType",
-        "1.0",
-        new Order
-        {
-            OrderId = "123",
-            OrderDate = DateTime.UtcNow,
-            OrderAmount = 100
-        }
-    )
-};
+    var order = new Order
+    {
+        OrderId = Guid.NewGuid().ToString(),
+        OrderDate = DateTime.UtcNow,
+        OrderAmount = 100
+    };
 
-await client.SendEventsAsync(events);
+    var events = new List<EventGridEvent>
+    {
+        new EventGridEvent(
+            "ExampleEventSubject",
+            "Example.EventType",
+            "1.0",
+            order
+        )
+    };
 
-Console.WriteLine("Event Published");
+    tasks.Add(client.SendEventsAsync(events));
+}
+
+await Task.WhenAll(tasks);
+Console.WriteLine($"{messagesToSend} Event(s) Published");

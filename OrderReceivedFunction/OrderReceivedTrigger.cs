@@ -4,6 +4,7 @@
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using Azure.Messaging;
 using Azure.Messaging.EventGrid;
 using Microsoft.Azure.Functions.Worker;
@@ -11,7 +12,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Test.Orders;
 
-public class Order
+public class Order : IMessage
 {
     public string OrderId { get; set; } = string.Empty;
 
@@ -22,15 +23,19 @@ public class Order
 
 public class OrderReceivedTrigger
 {
+    private readonly IMessageSession _messageSession;
     private readonly ILogger<OrderReceivedTrigger> _logger;
 
-    public OrderReceivedTrigger(ILogger<OrderReceivedTrigger> logger)
+    public OrderReceivedTrigger(
+        IMessageSession messageSession,
+        ILogger<OrderReceivedTrigger> logger)
     {
+        _messageSession = messageSession;
         _logger = logger;
     }
 
     [Function(nameof(OrderReceivedTrigger))]
-    public void Run([EventGridTrigger] EventGridEvent eventGridEvent)
+    public async Task Run([EventGridTrigger] EventGridEvent eventGridEvent)
     {
         try
         {
@@ -49,6 +54,7 @@ public class OrderReceivedTrigger
                     return;
                 }
                 _logger.LogInformation("Order received: {orderId}, {orderDate}, {orderAmount}", order.OrderId, order.OrderDate, order.OrderAmount);
+                await _messageSession.Send(order);
             }
         }
         catch (Exception ex)
