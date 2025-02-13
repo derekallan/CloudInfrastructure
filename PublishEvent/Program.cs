@@ -11,29 +11,76 @@ var config = new ConfigurationBuilder()
 
 var client = new EventGridPublisherClient(new Uri(config["EventGridTopic"]), new AzureKeyCredential(config["EventGridKey"]));
 
-var tasks = new List<Task>();
-var messagesToSend = 10;
-for (var i = 0; i < messagesToSend; i++)
+var cancel = new CancellationTokenSource();
+
+var backgroundTask = Task.Factory.StartNew(async () =>
 {
-    var order = new Order
+    var orderId = 1;
+    var ordersPerBatch = 10;
+    while (!cancel.Token.IsCancellationRequested)
     {
-        OrderId = Guid.NewGuid().ToString(),
-        OrderDate = DateTime.UtcNow,
-        OrderAmount = 100
-    };
+        var events = new List<EventGridEvent>();
+        for (int j = 0; j < ordersPerBatch; j++)
+        {
+            events.Add(new EventGridEvent(
+                    "ExampleEventSubject",
+                    "Example.EventType",
+                    "1.0",
+                    new Order
+                    {
+                        OrderId = Guid.NewGuid().ToString(),
+                        OrderDate = DateTime.UtcNow,
+                        OrderAmount = orderId++,
+                    }
+                ));
+        }
+        await Task.WhenAll(client.SendEventsAsync(events), Task.Delay(100));
+        Console.WriteLine($"{ordersPerBatch} Order(s) Published");
+    }
+}, cancel.Token);
 
-    var events = new List<EventGridEvent>
+
+// var tasks = new List<Task>();
+// var batches = 10;
+// var ordersPerBatch = 1;
+// var orderNumber = 1;
+// for (var i = 0; i < batches; i++)
+// {
+//     var events = new List<EventGridEvent>();
+//     for (int j = 0; j < ordersPerBatch; j++)
+//     {
+//         var order = new Order
+//         {
+//             OrderId = Guid.NewGuid().ToString(),
+//             OrderDate = DateTime.UtcNow,
+//             OrderAmount = orderNumber++,
+//         };
+
+//         events.Add(new EventGridEvent(
+//             "ExampleEventSubject",
+//             "Example.EventType",
+//             "1.0",
+//             order
+//         ));
+//     }
+
+//     tasks.Add(client.SendEventsAsync(events));
+// }
+
+
+while (true)
+{
+    Console.WriteLine("Press 'q' to quit");
+    var key = Console.ReadKey();
+    if (key.KeyChar == 'q')
     {
-        new EventGridEvent(
-            "ExampleEventSubject",
-            "Example.EventType",
-            "1.0",
-            order
-        )
-    };
-
-    tasks.Add(client.SendEventsAsync(events));
+        cancel.Cancel();
+        break;
+    }
 }
 
-await Task.WhenAll(tasks);
-Console.WriteLine($"{messagesToSend} Event(s) Published");
+await backgroundTask;
+
+Console.WriteLine("Done");
+Console.Write("Press any key to exit");
+Console.ReadKey();
