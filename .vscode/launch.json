@@ -17,6 +17,17 @@
             "cwd": "${workspaceFolder}/PublishEvent",
             "stopAtEntry": false,
             "console": "integratedTerminal"
+        },
+        {
+            "name": "ServiceBusConsumer",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "Build ServiceBusConsumer",
+            "program": "${workspaceFolder}/ServiceBusConsumer/bin/Debug/net8.0/ServiceBusConsumer.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/ServiceBusConsumer",
+            "stopAtEntry": false,
+            "console": "integratedTerminal"
         }
     ]
 }

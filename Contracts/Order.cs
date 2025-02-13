@@ -1,8 +1,8 @@
 using System;
 
-namespace PublishEvent;
+namespace Contracts;
 
-public class Order
+public class Order : IEvent
 {
     public string OrderId { get; set; } = string.Empty;
 

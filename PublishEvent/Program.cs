@@ -1,8 +1,8 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using Azure;
 using Azure.Messaging.EventGrid;
+using Contracts;
 using Microsoft.Extensions.Configuration;
-using PublishEvent;
 
 var config = new ConfigurationBuilder()
 .AddUserSecrets<Program>()

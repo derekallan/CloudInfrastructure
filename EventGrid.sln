@@ -6,6 +6,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderReceivedFunction", "Or
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PublishEvent", "PublishEvent\PublishEvent.csproj", "{9E3301CA-15B0-44B5-9A34-888953B272F5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceBusConsumer", "ServiceBusConsumer\ServiceBusConsumer.csproj", "{74211174-27F0-42B3-B929-84826267D539}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contracts", "Contracts\Contracts.csproj", "{14D32226-9ADD-4DD0-A754-4922553D6986}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +24,14 @@ Global
 		{9E3301CA-15B0-44B5-9A34-888953B272F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E3301CA-15B0-44B5-9A34-888953B272F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E3301CA-15B0-44B5-9A34-888953B272F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74211174-27F0-42B3-B929-84826267D539}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74211174-27F0-42B3-B929-84826267D539}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74211174-27F0-42B3-B929-84826267D539}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74211174-27F0-42B3-B929-84826267D539}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14D32226-9ADD-4DD0-A754-4922553D6986}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14D32226-9ADD-4DD0-A754-4922553D6986}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14D32226-9ADD-4DD0-A754-4922553D6986}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14D32226-9ADD-4DD0-A754-4922553D6986}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,25 +1,10 @@
-// Default URL for triggering event grid function in the local environment.
-// http://localhost:7071/runtime/webhooks/EventGrid?functionName={functionname}
-
-using System;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using Azure.Messaging;
 using Azure.Messaging.EventGrid;
+using Contracts;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
 namespace Test.Orders;
-
-public class Order : IMessage
-{
-    public string OrderId { get; set; } = string.Empty;
-
-    public DateTime OrderDate { get; set; }
-
-    public decimal OrderAmount { get; set; }
-}
 
 public class OrderReceivedTrigger
 {
@@ -54,7 +39,7 @@ public class OrderReceivedTrigger
                     return;
                 }
                 _logger.LogInformation("Order received: {orderId}, {orderDate}, {orderAmount}", order.OrderId, order.OrderDate, order.OrderAmount);
-                await _messageSession.Send(order);
+                await _messageSession.Publish(order);
             }
         }
         catch (Exception ex)
