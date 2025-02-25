@@ -9,6 +9,7 @@ endpointConfiguration.EnableInstallers();
 endpointConfiguration.Conventions()
                     .DefiningMessagesAs(t => t.UnderlyingSystemType.IsAssignableTo(typeof(Contracts.IMessage)))
                     .DefiningEventsAs(t => t.UnderlyingSystemType.IsAssignableTo(typeof(Contracts.IEvent)));
+endpointConfiguration.LimitMessageProcessingConcurrencyTo(16);
 
 var transport = endpointConfiguration.UseTransport<AzureServiceBusTransport>();
 transport.ConnectionString(Environment.GetEnvironmentVariable("SERVICEBUSCONNSTR_SERVICEBUS"));

@@ -16,8 +16,8 @@ var cancel = new CancellationTokenSource();
 var backgroundTask = Task.Factory.StartNew(async () =>
 {
     var orderId = 1;
-    var ordersPerBatch = 10;
-    while (!cancel.Token.IsCancellationRequested)
+    var ordersPerBatch = 100;
+    while (!cancel.Token.IsCancellationRequested && orderId < 10000)
     {
         var events = new List<EventGridEvent>();
         for (int j = 0; j < ordersPerBatch; j++)
@@ -31,6 +31,18 @@ var backgroundTask = Task.Factory.StartNew(async () =>
                         OrderId = Guid.NewGuid().ToString(),
                         OrderDate = DateTime.UtcNow,
                         OrderAmount = orderId++,
+                        CustomerId = Guid.NewGuid().ToString(),
+                        ProductId = Guid.NewGuid().ToString(),
+                        Quantity = 1,
+                        ShippingAddress = Guid.NewGuid().ToString(),
+                        BillingAddress = Guid.NewGuid().ToString(),
+                        OrderStatus = Guid.NewGuid().ToString(),
+                        ShippingDate = DateTime.UtcNow,
+                        DeliveryDate = DateTime.UtcNow,
+                        PaymentMethod = "asdifjioasdjfoijasfiojasiodfjaiopsdfioasdfnjnkl asdfnjukopasdfnhjuiop",
+                        ShippingCost = 1234129034.1234m,
+                        TaxAmount = 1,
+                        Currency = "CAD",
                     }
                 ));
         }

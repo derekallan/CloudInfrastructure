@@ -1,10 +1,12 @@
+using System.Collections.Concurrent;
+
 namespace ServiceBusConsumer;
 
 public static class MetricsTracker
 {
     public static int OrderCount { get; set; }
-    public static List<double> Delays { get; set; } = new List<double>(1000);
-    
+    public static ConcurrentBag<double> Delays { get; set; } = new ConcurrentBag<double>();
+
     public static void NewOrder()
     {
         OrderCount++;
