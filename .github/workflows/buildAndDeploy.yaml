@@ -6,7 +6,7 @@ on:
       - master
 
 env:
-  AZURE_FUNCTIONAPP_NAME: 'eventgridtrialprocessor'
+  AZURE_FUNCTIONAPP_NAME: 'privateendpointgridfunctionapp'
   AZURE_FUNCTIONAPP_PACKAGE_PATH: 'OrderReceivedFunction'
   DOTNET_VERSION: '8.0.x'
 
